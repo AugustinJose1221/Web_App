@@ -4,12 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def my_form():
-    return render_template('test.html')
-
-@app.route("/",methods=['POST'])
-def my_form_post():
-    nearest_park = "Django's garage" #str(h_list[pos,0])
-    greet = "Nearest parking lot is "+nearest_park
+    greet = "The nearest parking lot is St. Paul's parking centre"
     return render_template("test.html",name=greet)#processed_text
 
 if __name__ == "__main__":
