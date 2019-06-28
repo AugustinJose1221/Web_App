@@ -1,8 +1,10 @@
+'''
 import csv
 import googlemaps
 import numpy as np
+'''
 from flask import Flask, flash, redirect, render_template,request,session,abort
-
+'''
 gmaps = googlemaps.Client(key='AIzaSyAMp71qLXdZl5x80f0hjazPeUmtUyWAOIw')        #API Key
 data = "example1.csv"                                        #Dataset
 h_list={}
@@ -22,6 +24,7 @@ for a in hospital_list:
     x+=1
 dist=25
 pos = 0
+'''
 app = Flask(__name__)
 
 @app.route("/")
@@ -30,6 +33,7 @@ def my_form():
 
 @app.route("/",methods=['POST'])
 def my_form_post():
+    '''
     dist=25
     lat = request.form['text1']
     long = request.form['text2']
@@ -49,7 +53,8 @@ def my_form_post():
                     dist=distance["distance"]["value"]/1000
                     pos=i
                 #print("Name :",h_list[i,0],"\nAddress :",h_list[i,1],"\nDistance :",h_list[i,4],"\n")
-    nearest_park = str(h_list[pos,0])
+    '''
+    nearest_park = "Django's garage" #str(h_list[pos,0])
     greet = "Nearest parking lot is "+nearest_park
     return render_template("test.html",name=greet)#processed_text
 
