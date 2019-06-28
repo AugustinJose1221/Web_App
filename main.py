@@ -6,7 +6,7 @@ gmaps = googlemaps.Client(key='AIzaSyAMp71qLXdZl5x80f0hjazPeUmtUyWAOIw')        
 data = "example1.csv"                                        #Dataset
 h_list={}
 x=0
-with open(data, 'r+') as file:
+with open(data, 'r') as file:
     reader = csv.reader(file)
     hospital_list = list(reader)
 for a in hospital_list:
