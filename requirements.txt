@@ -1,3 +1,4 @@
 Flask==1.0.2
 googlemaps==3.0.2
 numpy==1.16.2
+requests==2.21.0
