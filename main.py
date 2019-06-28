@@ -52,7 +52,11 @@ def my_form_post():
     
     nearest_park = str(h_list[pos,0])
     greet = "Nearest parking lot is "+nearest_park
-    return render_template("test.html",name=greet)#processed_text
+    name = "P"
+    marker = "&markers=color:blue%7Clabel:"+str(name)+"%7C"+str(h_list[pos,2])+","+str(h_list[pos,3])
+    url = "https://maps.googleapis.com/maps/api/staticmap?center="+str(LatP)+","+str(LongP)+"&zoom=13&size=1200x1200&maptype=roadmap"+str(marker)+"&key=AIzaSyB84APvuzcc9lZ_NEikhIB_oot-i4AgFBA"
+
+    return render_template("test.html",name=greet,url=url)#processed_text
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8080, debug=True)
