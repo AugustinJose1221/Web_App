@@ -1,3 +1,4 @@
+'''
 runtime: python37
 
 handlers:
@@ -11,3 +12,10 @@ handlers:
   # the entire handlers section) when there are no static files defined.
 - url: /.*
   script: auto
+'''
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT manage:app
+
+runtime_config:
+  python_version: 3
