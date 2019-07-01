@@ -11,6 +11,7 @@ def my_form():
 @app.route("/",methods=['POST'])
 def my_form_post():
     try:
+        idx=[]
         sdate=request.form['sdate']
         stime=request.form['stime']
         edate=request.form['edate']
@@ -23,8 +24,8 @@ def my_form_post():
         flag=0
         flag1=0
         flag2=0
-        out1 = "No slot is available"
-        out = "No slot is available"
+        out1 = "No vendor is available"
+        out = "No vendor is available"
         arr =[]
         for i in data2:
             if sdate==i[2]:
@@ -32,16 +33,20 @@ def my_form_post():
                 break
         if flag2==0:
             flag1=1
+            idx.append(str(123456))
             arr.append(str(1))
+
+            
         if sdate==edate:
             for i in data:
                 if sdate==i[2]:
                     flag=0
-                    for j in range((int(st1)+3),(int(et1)+3)):
+                    for j in range((int(st1)+3),(int(et1)+4)):
                         if i[j]=="1":
                             flag=1
                             break
                     if flag==0:
+                        idx.append(str(i[0]))
                         arr.append(str(i[1]))
                         flag1 = 1
                     
@@ -58,7 +63,7 @@ def my_form_post():
                     id1 = i[0]
                     slot = i[1]
                     flag=0
-                    for j in range((int(st1)+3),26):
+                    for j in range((int(st1)+3),27):
                         if i[j]=="1":
                             flag=1
                             break
@@ -85,7 +90,7 @@ def my_form_post():
                             
                 
                                 if k[2]==str(newdate+datetime.timedelta(1)):
-                                    for n in range(3,(int(et1)+3)):
+                                    for n in range(3,(int(et1)+4)):
                                         if k[n]=="1":
                                                 flag=1
                                                 break
@@ -97,13 +102,14 @@ def my_form_post():
                         continue
 
                     if flag==0:
+                        idx.append(str(i[0]))
                         arr.append(str(i[1]))
                         flag1 = 1
                         break
                 else:
                     continue
         if flag1==1:
-             s = "Slot "+arr[0]+" is available"
+             s = "Slot "+arr[0]+" at vendor "+idx[0]+" is available"
              return render_template("test1.html",time1=s)
         elif flag1==0:
             return render_template("test1.html",time1=out)
