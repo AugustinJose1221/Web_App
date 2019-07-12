@@ -11,7 +11,7 @@ gmaps = googlemaps.Client(key='AIzaSyAMp71qLXdZl5x80f0hjazPeUmtUyWAOIw')        
 loc_data = "example1.csv"                                        #Dataset
 h_list={}
 x=0
-with open(loc_data, 'r+') as file:
+with open(loc_data, 'r') as file:
     reader = csv.reader(file)
     owner_list = list(reader)
 for a in owner_list:
@@ -129,7 +129,7 @@ def booking_post():
         st=str(stime[0:2])+str(stime[3:5])
         et=str(etime[0:2])+str(stime[3:5])
         x1 = SlotCheck(str(sdate),str(st),str(edate),str(et))
-        with open("example1.csv",'r+') as file:
+        with open("example1.csv",'r') as file:
             reader = csv.reader(file)
             vendor_list = list(reader)
 
