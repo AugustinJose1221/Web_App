@@ -42,6 +42,7 @@ def signin_post():
     with open('Wallet.csv','r') as file:
         reader = csv.reader(file)
         user_list = list(reader)
+        file.close()
     for i in user_list:
         if str(UID)==str(i[0]):
             return render_template("SignIn.html",text1="UserID already existing")
