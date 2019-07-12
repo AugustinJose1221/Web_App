@@ -39,15 +39,15 @@ def signin():
 def signin_post():
     UID=request.form['ID']
     Password=request.form['Password']
-    with open('Wallet.csv','r+') as file:
-        reader = csv.reader(file)
+    with open('Wallet.csv','r+') as file1:
+        reader = csv.reader(file1)
         user_list = list(reader)
         file.close()
     for i in user_list:
         if str(UID)==str(i[0]):
             return render_template("SignIn.html",text1="UserID already existing")
     data=[[str(UID),str(Password),str(300)]]
-    with open('Wallet.csv','a',newline='') as csvFile:
+    with open('Wallet.csv','a+',newline='') as csvFile:
         csv.writer(csvFile).writerows(data)
         csvFile.close()
     return redirect(url_for('login'))
@@ -63,8 +63,8 @@ def login_post():
     global UID2
     UID2 = str(UID1)
     Password=request.form['Password']
-    with open('Wallet.csv','r+') as file:
-        reader = csv.reader(file)
+    with open('Wallet.csv','r+') as file2:
+        reader = csv.reader(file2)
         user_list = list(reader)
     for i in user_list:
         if str(UID1)==i[0] and str(Password)==i[1]:
