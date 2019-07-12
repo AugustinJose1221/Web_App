@@ -39,7 +39,7 @@ def signin():
 def signin_post():
     UID=request.form['ID']
     Password=request.form['Password']
-    with open('Wallet.csv','r') as file:
+    with open('Wallet.csv','r+') as file:
         reader = csv.reader(file)
         user_list = list(reader)
         file.close()
@@ -63,7 +63,7 @@ def login_post():
     global UID2
     UID2 = str(UID1)
     Password=request.form['Password']
-    with open('Wallet.csv','r') as file:
+    with open('Wallet.csv','r+') as file:
         reader = csv.reader(file)
         user_list = list(reader)
     for i in user_list:
@@ -83,6 +83,7 @@ def booking_post():
         long = request.form['text2']
         LatP = float(lat)
         LongP = float(long)
+        pos=0
         for i in range(0,x):
             t = float(h_list[i,2])-float(LatP)
             p = float(h_list[i,3])-float(LongP)
