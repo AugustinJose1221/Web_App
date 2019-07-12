@@ -46,7 +46,7 @@ def signin_post():
         if str(UID)==str(i[0]):
             return render_template("SignIn.html",text1="UserID already existing")
     data=[[str(UID),str(Password),str(300)]]
-    with open('Wallet.csv','a+',newline='') as csvFile:
+    with open('Wallet.csv','a',newline='') as csvFile:
         csv.writer(csvFile).writerows(data)
         csvFile.close()
     return redirect(url_for('login'))
