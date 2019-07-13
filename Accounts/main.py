@@ -42,12 +42,12 @@ def signin_post():
     with open('Wallet.csv','r') as file1:
         reader = csv.reader(file1)
         user_list = list(reader)
-        file.close()
+        file1.close()
     for i in user_list:
         if str(UID)==str(i[0]):
             return render_template("SignIn.html",text1="UserID already existing")
     data=[[str(UID),str(Password),str(300)]]
-    with open('Wallet.csv','a+',newline='') as csvFile:
+    with open('Wallet.csv','a',newline='') as csvFile:
         csv.writer(csvFile).writerows(data)
         csvFile.close()
     return redirect(url_for('login'))
@@ -64,8 +64,9 @@ def login_post():
     UID2 = str(UID1)
     Password=request.form['Password']
     with open('Wallet.csv','r') as file2:
-        reader = csv.reader(file2)
-        user_list = list(reader)
+        reader1 = csv.reader(file2)
+        user_list = list(reader1)
+        file2.close()
     for i in user_list:
         if str(UID1)==i[0] and str(Password)==i[1]:
             return redirect(url_for('booking'))
