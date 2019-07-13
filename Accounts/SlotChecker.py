@@ -70,8 +70,8 @@ def SlotCheck(Sdate,Stime,Edate,Etime):
             if int(T)>=0:
                 Arr1.append(i)     
         for j in Arr1:
-            STime2 = datetime.datetime(int(j[3][0:4]),int(j[3][5:7]),int(j[3][8:10]),int(j[4][0:2]),int(j[4][2:4]),0)
-            ETime2 = datetime.datetime(int(j[5][0:4]),int(j[5][5:7]),int(j[5][8:10]),int(j[6][0:2]),int(j[6][2:4]),0)
+            STime2 = datetime.datetime(int(j[3][0:4]),int(j[3][5:7]),int(j[3][8:10]),int(j[4][0:2]),int(j[4][3:5]),0)
+            ETime2 = datetime.datetime(int(j[5][0:4]),int(j[5][5:7]),int(j[5][8:10]),int(j[6][0:2]),int(j[6][3:5]),0)
             d2=str(STime2-ETime1)
             d3=str(STime1-ETime2)
             t1=d2[0]+str(1)
