@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request,redirect, url_for
 import requests
+import pandas as pd
 import datetime
 import googlemaps
 import numpy as np
@@ -46,6 +47,10 @@ def signin_post():
     for i in user_list:
         if str(UID)==str(i[0]):
             return render_template("SignIn.html",text1="UserID already existing")
+    df = pd.read_csv("Wallet.csv")
+    df1 = pd.DataFrame(df)
+    df2 = df1.append({'ID':str(UID),'Password':str(Password),'Credits':str(300)},ignore_index=True)
+    df2.to_csv("Wallet.csv, index=False)
     '''
     data=[[str(UID),str(Password),str(300)]]
     with open('Wallet.csv','a',newline='') as csvFile:
