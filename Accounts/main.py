@@ -50,7 +50,7 @@ def signin_post():
     df = pd.read_csv("Wallet.csv")
     df1 = pd.DataFrame(df)
     df2 = df1.append({'ID':str(UID),'Password':str(Password),'Credits':str(300)},ignore_index=True)
-    df2.to_csv("Wallet.csv, index=False)
+    df2.to_csv("Wallet.csv", index=False)
     '''
     data=[[str(UID),str(Password),str(300)]]
     with open('Wallet.csv','a',newline='') as csvFile:
