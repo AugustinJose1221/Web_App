@@ -39,7 +39,7 @@ def signin():
 def signin_post():
     UID=request.form['ID']
     Password=request.form['Password']
-    with open('Wallet.csv','r+') as file1:
+    with open('Wallet.csv','r') as file1:
         reader = csv.reader(file1)
         user_list = list(reader)
         file.close()
@@ -63,7 +63,7 @@ def login_post():
     global UID2
     UID2 = str(UID1)
     Password=request.form['Password']
-    with open('Wallet.csv','r+') as file2:
+    with open('Wallet.csv','r') as file2:
         reader = csv.reader(file2)
         user_list = list(reader)
     for i in user_list:
