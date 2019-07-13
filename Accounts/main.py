@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request,redirect, url_for
 import requests
-import cloudstorage as gcs
-import pandas as pd
 import datetime
 import googlemaps
+import random
 import numpy as np
 from SlotChecker import SlotCheck
 import sys
@@ -13,7 +12,7 @@ gmaps = googlemaps.Client(key='AIzaSyAMp71qLXdZl5x80f0hjazPeUmtUyWAOIw')        
 loc_data = "example1.csv"                                        #Dataset
 h_list={}
 x=0
-with open(loc_data, 'r') as file:
+with open(loc_data, 'r+') as file:
     reader = csv.reader(file)
     owner_list = list(reader)
 for a in owner_list:
@@ -41,26 +40,16 @@ def signin():
 def signin_post():
     UID=request.form['ID']
     Password=request.form['Password']
-    with open('Wallet.csv','r') as file1:
-        reader = csv.reader(file1)
+    with open('Wallet.csv','r') as file:
+        reader = csv.reader(file)
         user_list = list(reader)
-        file1.close()
     for i in user_list:
         if str(UID)==str(i[0]):
             return render_template("SignIn.html",text1="UserID already existing")
-    gcs_file = gcs.open("Wallet.csv",'a')
-    gcs_file.write([[str(UID),str(Password),str(300)]])
-    gcs.close()
-    '''
-    df = pd.read_csv("Wallet.csv")
-    df1 = pd.DataFrame(df)
-    df2 = df1.append({'ID':str(UID),'Password':str(Password),'Credits':str(300)},ignore_index=True)
-    df2.to_csv("Wallet.csv", index=False)
     data=[[str(UID),str(Password),str(300)]]
-    with open('Wallet.csv','a',newline='') as csvFile:
+    with open('Wallet.csv','a+',newline='') as csvFile:
         csv.writer(csvFile).writerows(data)
         csvFile.close()
-    '''
     return redirect(url_for('login'))
 
 
@@ -72,14 +61,15 @@ def login():
 def login_post():
     UID1=request.form['ID']
     global UID2
+    global Credits
     UID2 = str(UID1)
     Password=request.form['Password']
-    with open('Wallet.csv','r') as file2:
-        reader1 = csv.reader(file2)
-        user_list = list(reader1)
-        file2.close()
+    with open('Wallet.csv','r') as file:
+        reader = csv.reader(file)
+        user_list = list(reader)
     for i in user_list:
         if str(UID1)==i[0] and str(Password)==i[1]:
+            Credits=i[2]
             return redirect(url_for('booking'))
     return render_template("Login.html",text1="UserID or Password is wrong")
 
@@ -95,7 +85,6 @@ def booking_post():
         long = request.form['text2']
         LatP = float(lat)
         LongP = float(long)
-        pos=0
         for i in range(0,x):
             t = float(h_list[i,2])-float(LatP)
             p = float(h_list[i,3])-float(LongP)
@@ -143,18 +132,28 @@ def booking_post():
         st=str(stime[0:2])+str(stime[3:5])
         et=str(etime[0:2])+str(stime[3:5])
         x1 = SlotCheck(str(sdate),str(st),str(edate),str(et))
-        with open("example1.csv",'r') as file:
+        with open("example1.csv",'r+') as file:
             reader = csv.reader(file)
             vendor_list = list(reader)
 
         arr1=[]
         arr2=[]
         arr3=[]
+        arr4=[]
+        arr5=[]
+        global ARR
+        global SD
+        global ST
+        global ED
+        global ET
+        SD = sdate
+        ST = stime
+        ED = edate
+        ET = etime
 
         for i in vendor_list:
             for j in range(1,int(i[7])+1):
-                arr1.append([str(i[0]),str(j)])
-            
+                arr1.append([str(i[0]),str(j)])   
                 
         id1=0
         fl=0
@@ -166,30 +165,69 @@ def booking_post():
                 continue
             else:
                 arr2.append(i[0])
+                arr4.append(i)
                 id1=i[0]
             fl=1
-
-
+        
         q=0
+        u=0
         for i in IDString:
+            u=0
             for j in arr2:
                 if i in j:
                     OutString.append(FinalString[q])
+                    arr5.append(arr4[u])
                     break
+                u+=1
             q+=1
-        
+
+        ARR = arr5
             
         if len(OutString)<5:
             for i in range(len(OutString),6):
                 OutString.append("None")
         
-        
-        return render_template("Tester.html",name1=OutString[0],name2=OutString[1],name3=OutString[2],name4=OutString[3],name5=OutString[4],user=str(UID2))#processed_text
+        #Edited on July 13
+
+                
+        global VList
+        VList = OutString
+        return redirect(url_for('submit'))
     except ValueError:
         return render_template("Tester.html",name1="ValueError",user=str(UID2))
     except googlemaps.exceptions.TransportError:
         return render_template("Tester.html",name1="TransportError",user=str(UID2))
 
+@app.route("/booking/submit")
+def submit():
+    return render_template('Booking.html',name1=VList[0],name2=VList[1],name3=VList[2],name4=VList[3],name5=VList[4],user=str(UID2),credit=Credits)
+
+@app.route("/booking/submit",methods=["POST"])
+def submit_form():
+    Choice=request.form['choice']
+    if str(Choice) in ("1","2","3","4","5"):
+        if str(VList[int(Choice)-1])=="None":
+            return render_template("Booking.html",name1="None",name2="None",name3="None",name4="None",name5="None",stats="Invalid Entry",user=str(UID2),credit=Credits)
+        Vendor=ARR[int(Choice)-1]
+        data =[[str(Vendor[0]),str(Vendor[1]),str(random.randint(100000,999999)),str(SD),str(ST),str(ED),str(ET)]]
+        with open('Owner.csv','a+',newline='') as csvFile:
+            csv.writer(csvFile).writerows(data)
+        csvFile.close()
+        ST1 = datetime.datetime(int(SD[0:4]),int(SD[5:7]),int(SD[8:10]),int(ST[0:2]),int(ST[3:5]),0)
+        ST2 = datetime.datetime(int(ED[0:4]),int(ED[5:7]),int(ED[8:10]),int(ET[0:2]),int(ET[3:5]),0)
+        TD=ST2-ST1
+        global PRICE
+        Price = ((TD.total_seconds())/3600)*10
+        PRICE = Price
+        return redirect(url_for('success'))
+    else:
+        return render_template("Booking.html",name1="None",name2="None",name3="None",name4="None",name5="None",stats="Enter valid slot number",user=str(UID2),credit=Credits)
+
+@app.route("/booking/submit/success")
+def success():
+    return render_template('Success.html',credit=PRICE)    
+    
+    
 
 
 
